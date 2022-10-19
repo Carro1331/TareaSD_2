@@ -1,0 +1,1 @@
+CREATE TABLE Items(name VARCHAR(255), lastname VARCHAR(255), dni VARCHAR(255), mail VARCHAR(255),patente VARCHAR(255), premium BOOLEAN);
