@@ -1,1 +1,4 @@
-CREATE TABLE Items(name VARCHAR(255), lastname VARCHAR(255), dni VARCHAR(255), mail VARCHAR(255),patente VARCHAR(255), premium BOOLEAN);
+CREATE TABLE members(name VARCHAR, lastname VARCHAR, dni INT, mail VARCHAR,patente VARCHAR, premium VARCHAR);
+INSERT INTO members (name,lastname,dni,mail,patente,premium) values('abel','baulloza','20.245.835-1','abel.baulloza@mail.udp.cl','CGZY30','0');
+
+CREATE TABLE sales(client VARCHAR, lastname VARCHAR, dni INT, mail VARCHAR,patente VARCHAR, premium VARCHAR);
