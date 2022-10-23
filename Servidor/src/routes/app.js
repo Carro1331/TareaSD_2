@@ -6,10 +6,10 @@ const router = Router();
 //const express2 = require('express')
 
 //const app = express();
-const { members, registro_new_member, register_new_sales } = require('../controllers/index.controller')
+const { members, register_new_member, register_new_sales } = require('../controllers/index.controller')
 
 router.get('/members', members);
-router.post('/register_new_member', registro_new_member)
+router.post('/register_new_member', register_new_member)
 router.post('/register_new_sale', register_new_sales)
 
 
