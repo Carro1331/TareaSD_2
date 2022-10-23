@@ -11,7 +11,13 @@ const connectionData = {
 
 const pool = new Pool(connectionData)
 
+const kafka = new Kafka({
+    clientId: 'my-app',
+    brokers: ['localhost:9092']
+  })
+
 const members = async (req,res) => {
+    
         //return await pool.query(`select * from ${res}`).then((consulta) => {
         /*return await pool.query(`select * from users`).then((consulta) => {
             const arr = consulta.rows.map((row) => {
@@ -34,25 +40,58 @@ const members = async (req,res) => {
     }
 
 const register_new_member = async (req,res) => {
-    const {name,lastname,dni,mail,patente,premium} = req.query
     try{
-        //console.log(name)
-        res.json('HolaaaS')
-        let sql = 'insert into members (name,lastname,dni,mail,patente,premium) values($1,$2,$3,$4,$5,$6)';
-        const algo = [name,lastname,dni,mail,patente,premium]
-        let rows = pool.query(sql,algo)
+        console.log('New members')
+        //let sql = 'insert into members (name,lastname,dni,mail,patente,premium) values($1,$2,$3,$4,$5,$6)';
+        //const algo = [name,lastname,dni,mail,patente,premium]
+        //let rows = pool.query(sql,algo)
+        const {name,lastname,dni,mail,patente,premium} = req.query
+        let new_member = {
+            name: name,
+            lastname: lastname,
+            dni: dni,
+            mail: mail,
+            patente: patente,
+            premium: premium
+        }
+
+        const producer = kafka.producer()
+        await producer.connect()
+        await producer.send({
+            topic: 'test',
+            messages: [{ value: JSON.stringify(new_member), partition:1 }],
+        })
+        await producer.disconnect()
+        res.json(new_member)
     }catch(err){
         console.log(`Error: ${err}`)
     }
 }
 
 const register_new_sales = async (req,res) => {
-    const {client,count_sopaipillas,hours, stock, ubication} = req.query
+    /*const {client,count_sopaipillas,hours, stock, ubication} = req.query
     try{
         res.json('Holass')
         let sql = 'insert into sales (client,count_sopaipillas,hours,stock,ubication) values($1,$2,$3,$4,$5)'
         const algo = [client,count_sopaipillas,hours,stock,ubication]
         pool.query(sql,algo)
+    }catch(err){
+        console.log(`Error: ${err}`)
+    }*/
+
+    try{
+        const consumer = kafka.consumer({ groupId: 'test-group' })
+
+        await consumer.connect()
+        await consumer.subscribe({ topic: 'test', fromBeginning: true })
+        
+        await consumer.run({
+            eachMessage: async ({ topic, partition, message }) => {
+            console.log({
+                value: message.value.toString(),
+            })
+            },
+        })
     }catch(err){
         console.log(`Error: ${err}`)
     }
