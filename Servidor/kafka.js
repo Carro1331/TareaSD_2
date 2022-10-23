@@ -1,8 +1,8 @@
 const { Kafka } = require('kafkajs');
 
 const kafka = new Kafka({
-  clientId: 'my-app',
-  brokers: ['kafka1:9092'],
+  clientId: 'Sopaipilla',
+  brokers: ['localhost:9092'],
 })
 
 
@@ -13,7 +13,7 @@ async function producer(){
   await producer.send({
     topic: 'test-topic',
     messages: [
-      { value: 'Hello KafkaJS user!' },
+      { value: 'FUNCIONA ESTAWEAAAA!' },
     ],
   })
   await producer.disconnect()
