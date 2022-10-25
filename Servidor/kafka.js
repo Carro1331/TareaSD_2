@@ -5,9 +5,6 @@ const kafka = new Kafka({
   brokers: ['localhost:9092'],
 })
 
-
-
-async function producer(){
   const producer = kafka.producer()
   await producer.connect()
   await producer.send({
@@ -16,10 +13,8 @@ async function producer(){
       { value: 'FUNCIONA ESTAWEAAAA!' },
     ],
   })
-  await producer.disconnect()
-}
+  //await producer.disconnect()
 
-async function consumer(){
   const consumer = kafka.consumer({ groupId: 'test-group' })
   await consumer.connect()
   await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
@@ -31,8 +26,5 @@ async function consumer(){
       })
     },
   })
-}
 
-producer();
-consumer();
 
