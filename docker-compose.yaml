@@ -51,6 +51,17 @@ services:
 
     ports:
       - "8001:8000"
+
+  stock_consumer:
+    container_name: stock_consumer
+    build: ./server/Stock/consumer
+    networks:
+      - lared
+    # volumes:
+    #   - ./server/error:/usr/src/app
+
+    ports:
+      - "8002:8000"
   
   zookeeper:
     container_name: elzookeeper

@@ -29,37 +29,33 @@ var kafka = new Kafka({
   brokers: ["kafka:9092"],
 });
 
-app.post("/new_member", (req, res) => {
-  console.log("new_member");
+app.post("/new_sale", (req, res) => {
+  console.log("new_sale");
   (async () => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
       await producer.connect();
-      const { name, lastname, dni, mail, patente, premium } = req.body;
+      const { client, count_sopaipillas, hora, stock, ubicacion } = req.body;
       var time = Math.floor(new Date() / 1000);
       let user = {
-        name: name,
-        lastname: lastname,
-        dni: dni,
-        mail: mail,
-        patente: patente,
-        premium: premium,
+        client: client,
+        count_sopaipillas: count_sopaipillas,
+        hora: hora,
+        stock: stock,
+        ubicacion: ubicacion,
         tiempo: time.toString()
       }
       await producer.send({
-        topic: "new_member",
+        topic: "new_sale",
         //value: JSON.stringify(user)
         messages: [{ value: JSON.stringify(user) }],
-      })
-      await producer.send({
-        topic: "stock",
-        messages: [{value: JSON.stringify(user)}]
       })
       await producer.disconnect();
       //await admin.disconnect();
       res.json(user);
   })();
 });
+
 
 
   ///////////////////////////////////////////////////////////////  
