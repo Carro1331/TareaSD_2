@@ -25,7 +25,7 @@ var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
 });
-const consumer = kafka.consumer({ groupId: "test-group" });
+const consumer = kafka.consumer({ groupId: "group-sales" });
 
 //kafka
 /*var consumer = new Kafka.KafkaConsumer({
@@ -46,19 +46,20 @@ global.consumer = consumer;*/
 
 //app.use(require('./api/find'))
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
   res.send('sale list')
   main();
-})
+})*/
+
 var value = null
 var json = {}
-var registro = {};
-var bloqueados = [];
+//var registro = {};
+var stock = [];
 
 const main = async () => {
-  console.log("Entra main")
+  console.log("Entra sale")
   await consumer.connect();
-  await consumer.subscribe({ topic: "new_sale", fromBeginning: true });
+  await consumer.subscribe({ topic: "sales", fromBeginning: true });
   console.log("producer");
 
   await consumer.run({
@@ -69,28 +70,16 @@ const main = async () => {
       })
       json = JSON.parse(value)
       //console.log(json["tiempo"])
-      let find = json["name"]
-      if(bloqueados.includes(/*json["name"]*/json))
-      {
-        let word = json["username"]
-        //res.json(word+" bloqueado")
-        console.log("ta bloqueado sorry :(")
-        //return
+      //console.log(json)
+      //let find = json["name"]
+
+      if(stock.includes(json)){
+        console.log('Consulta ya guardada')
       }else{
-        if(!(json["username"] in registro)){
-          var array = []
-          registro[json["username"]] = array
-          registro[json["username"]].push(json["tiempo"])
-        }else{
-          registro[json["username"]].push(json["tiempo"])
-        }
-        //console.log(registro[json["username"]])
-        //console.log(registro[json["username"]].length)
-        if(registro[json["username"]].length >= 5 && registro[json["username"]][registro[json["username"]].length -1] - registro[json["username"]][registro[json["username"]].length -5] <60){
-          //console.log(registro[json["username"]][registro[json["username"]].length -1] - registro[json["username"]][registro[json["username"]].length -5])
-          console.log("Bloqueado")
-          bloqueados.push(json["username"])
-          console.log(bloqueados)
+        stock.push(json)
+        if(stock.length==5){
+          console.log('Lista de 5 consultas guardadas')
+          console.log(stock)
         }
       }
     },

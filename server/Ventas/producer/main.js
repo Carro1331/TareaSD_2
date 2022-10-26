@@ -29,30 +29,43 @@ var kafka = new Kafka({
   brokers: ["kafka:9092"],
 });
 
-app.post("/new_sale", (req, res) => {
-  console.log("new_sale");
+app.post("/sales", (req, res) => {
+  console.log("sales");
   (async () => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
       await producer.connect();
       const { client, count_sopaipillas, hora, stock, ubicacion } = req.body;
       var time = Math.floor(new Date() / 1000);
-      let user = {
+      let sale = {
         client: client,
         count_sopaipillas: count_sopaipillas,
         hora: hora,
         stock: stock,
-        ubicacion: ubicacion,
-        tiempo: time.toString()
+        ubicacion: ubicacion
       }
-      await producer.send({
-        topic: "new_sale",
-        //value: JSON.stringify(user)
-        messages: [{ value: JSON.stringify(user) }],
-      })
+      const topicMessages = [
+        {
+            topic: 'coordenadas',
+            messages: [{key: 'key1', value: JSON.stringify(sale), partition: 1}]
+        },
+        {
+          // Stock debe estar leyendo constantes consultas
+          topic: 'sales',
+          messages: [{value: JSON.stringify(sale)}]
+        },
+        {
+            // Stock debe estar leyendo constantes consultas
+            topic: 'stock',
+            messages: [{value: JSON.stringify(sale)}]
+        }
+    ]
+    // Recibe y envia coordenadas al topico de las coordenadas en otra particion, aun no se como hacer eso asi que lo envio ahi nomas
+      await producer.sendBatch({ topicMessages })
       await producer.disconnect();
       //await admin.disconnect();
-      res.json(user);
+      res.json(sale);
+      console.log('Venta registrada')
   })();
 });
 

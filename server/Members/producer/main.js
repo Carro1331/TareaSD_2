@@ -30,34 +30,59 @@ var kafka = new Kafka({
 });
 
 app.post("/new_member", (req, res) => {
-  console.log("new_member");
   (async () => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
       await producer.connect();
       const { name, lastname, dni, mail, patente, premium } = req.body;
-      var time = Math.floor(new Date() / 1000);
-      let user = {
+      let member = {
         name: name,
         lastname: lastname,
         dni: dni,
         mail: mail,
         patente: patente,
         premium: premium,
-        tiempo: time.toString()
       }
-      await producer.send({
-        topic: "new_member",
+      if(member["premium"] == 'si'){
+        const topicMessages = [
+          {
+            // Stock debe estar leyendo constantes consultas
+            topic: 'members',
+            messages: [{value: JSON.stringify(member), partition: 1}]
+          },
+          {
+              // Stock debe estar leyendo constantes consultas
+              topic: 'stock',
+              messages: [{value: JSON.stringify(member)}]
+          }
+        ]
+        await producer.sendBatch({ topicMessages })
+      }else{
+        const topicMessages = [
+          {
+            // Stock debe estar leyendo constantes consultas
+            topic: 'members',
+            messages: [{value: JSON.stringify(member), partition: 0}]
+          },
+          {
+              // Stock debe estar leyendo constantes consultas
+              topic: 'stock',
+              messages: [{value: JSON.stringify(member)}]
+          }
+        ]
+        await producer.sendBatch({ topicMessages })
+      }
+      
+
+      /*await producer_stock.send({
+        topic: "stock",
         //value: JSON.stringify(user)
         messages: [{ value: JSON.stringify(user) }],
-      })
-      await producer.send({
-        topic: "stock",
-        messages: [{value: JSON.stringify(user)}]
-      })
+      })*/
       await producer.disconnect();
       //await admin.disconnect();
-      res.json(user);
+      res.json(member);
+      console.log("Miembro registrado");
   })();
 });
 
@@ -65,9 +90,9 @@ app.post("/new_member", (req, res) => {
   ///////////////////////////////////////////////////////////////  
 
 
-app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
   res.send("ola api");
-});
+});*/
 
 
 /* PORTS */

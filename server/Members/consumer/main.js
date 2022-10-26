@@ -25,7 +25,7 @@ var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
 });
-const consumer = kafka.consumer({ groupId: "test-group" });
+const consumer = kafka.consumer({ groupId: "group-members" });
 
 
 //kafka
@@ -46,56 +46,36 @@ global.consumer = consumer;*/
 /* VARIABLES */
 
 
-
-
 //app.use(require('./api/find'))
 
-app.get('/', (req, res) => {
+/*app.get('/member_list', (req, res) => {
   res.send('Member list')
   main();
-})
+})*/
+
 var value = null
 var json = {}
 var registro = {};
-var bloqueados = [];
+var members = [];
 
 const main = async () => {
   console.log("Entra main")
   await consumer.connect();
-  await consumer.subscribe({ topic: "new_member", fromBeginning: true });
+  await consumer.subscribe({ topic: "members", fromBeginning: true });
   console.log("producer");
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
-      console.log({
+      /*console.log({
         value: message.value.toString(),
-      })
+      })*/
       json = JSON.parse(value)
-      //console.log(json["tiempo"])
-      let find = json["premium"]
-      if(bloqueados.includes(json["premium"]))
-      {
-        let word = json["username"]
-        //res.json(word+" bloqueado")
-        console.log("ta bloqueado sorry :(")
-        //return
+      console.log(json)
+      if(members.includes(json)){
+
       }else{
-        if(!(json["username"] in registro)){
-          var array = []
-          registro[json["username"]] = array
-          registro[json["username"]].push(json["tiempo"])
-        }else{
-          registro[json["username"]].push(json["tiempo"])
-        }
-        //console.log(registro[json["username"]])
-        //console.log(registro[json["username"]].length)
-        if(registro[json["username"]].length >= 5 && registro[json["username"]][registro[json["username"]].length -1] - registro[json["username"]][registro[json["username"]].length -5] <60){
-          //console.log(registro[json["username"]][registro[json["username"]].length -1] - registro[json["username"]][registro[json["username"]].length -5])
-          console.log("Bloqueado")
-          bloqueados.push(json["username"])
-          console.log(bloqueados)
-        }
+        members.push(json)
       }
     },
   })
@@ -104,7 +84,7 @@ const main = async () => {
 
 //asdlaskdj
 app.get('/blocked', (req, res) => {
-  res.send(bloqueados)
+  res.send(members)
 })
 /* PORTS */
 

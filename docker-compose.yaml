@@ -10,6 +10,7 @@ services:
     build: ./server/Members/producer
     depends_on:
        - members_consumer
+       - kafka
     # volumes:
     #    - './server/api:/usr/src/app'
     networks:
@@ -22,6 +23,8 @@ services:
     build: ./server/Members/consumer
     networks:
       - lared
+    depends_on:
+      - kafka
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -35,6 +38,7 @@ services:
       - lared
     depends_on:
        - sales_consumer
+       - kafka
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -46,6 +50,8 @@ services:
     build: ./server/Ventas/consumer
     networks:
       - lared
+    depends_on:
+      - kafka
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -57,6 +63,8 @@ services:
     build: ./server/Stock/consumer
     networks:
       - lared
+    depends_on:
+      - kafka
     # volumes:
     #   - ./server/error:/usr/src/app
 

@@ -29,8 +29,8 @@ var kafka = new Kafka({
   brokers: ["kafka:9092"],
 });
 
-app.post("/new_sale", (req, res) => {
-  console.log("new_sale");
+app.post("/", (req, res) => {
+  console.log("stock");
   (async () => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
