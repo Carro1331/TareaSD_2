@@ -31,7 +31,7 @@ var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
 });
-
+3
 app.post("/new_member", (req, res) => {
   (async () => {
       const producer = kafka.producer();
@@ -81,7 +81,8 @@ app.post("/new_member", (req, res) => {
 
       await producer.disconnect();
 
-      res.json(member);
+      res.json("Agregado");
+
       console.log("Miembro registrado");
       console.log("Miembros Normales:" ,cpnopremium.length)
       console.log("Miembros Premium:" , cpremium.length)
