@@ -25,8 +25,7 @@ var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
 });
-
-
+const consumer = kafka.consumer({ groupId: "group-ubication" });
 
 //kafka
 /*var consumer = new Kafka.KafkaConsumer({
@@ -45,49 +44,50 @@ consumer.on('ready', () => {
 global.consumer = consumer;*/
 /* VARIABLES */
 
-
 //app.use(require('./api/find'))
 
-/*app.get('/member_list', (req, res) => {
-  res.send('Member list')
+/*app.get('/', (req, res) => {
+  res.send('sale list')
   main();
 })*/
 
 var value = null
-var members = [];
-
+var json = {}
+var stock = []
+//var registro = {};
 const main = async () => {
-  const consumer = kafka.consumer({ groupId: "members" });
-  console.log("Entra main")
+  console.log("Entra Ubication")
   await consumer.connect();
-  await consumer.subscribe({ topic: "members", fromBeginning: true });
+  await consumer.subscribe({ topic: "ubication", fromBeginning: true });
   console.log("producer");
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      //value = message.value
-      console.log(message.value)
-      var miembro = JSON.parse(message.value.toString());
-      console.log(miembro)
-
-    },
-  })
-}
-      /*a = value.toString()
-      members.push(a)
-      console.log(members)
+      value = message.value
+      var algo = JSON.parse(message.value.toString());
+      console.log(algo)
+      json = JSON.parse(value)
+      
+      if(json["stock"] <= 20){
+        stock.push(json)
+        if(stock.length==5){
+          console.log('Hay 5 miembros registrados con stock para reposicionar')
+          console.log(stock)
+          stock = [] //stock.lenght=0
+        }
+      }
     },
   })
   .catch(console.error)
 };
 
 //asdlaskdj
-app.get('/members', (req, res) => {
-  res.send(members)
+app.get('/blocked', (req, res) => {
+  res.send(bloqueados)
 })
 /* PORTS */
 
 app.listen(port,host,()=>{
-    console.log(`Registro de miembros in: http://localhost:${port}.`)
+    console.log(`API-Blocked run in: http://localhost:${port}.`)
     main()
 });

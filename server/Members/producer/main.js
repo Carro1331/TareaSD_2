@@ -55,11 +55,11 @@ app.post("/new_member", (req, res) => {
             topic: 'members',
             messages: [{value: JSON.stringify(member), partition: 1}]
           },
-          {
+          /*{
               // Stock debe estar leyendo constantes consultas
               topic: 'stock',
               messages: [{value: JSON.stringify(member)}]
-          }
+          }*/
         ]
         await producer.sendBatch({ topicMessages })
       }else{
@@ -70,11 +70,11 @@ app.post("/new_member", (req, res) => {
             topic: 'members',
             messages: [{value: JSON.stringify(member), partition: 0}]
           },
-          {
+          /*{
               // Stock debe estar leyendo constantes consultas
               topic: 'stock',
               messages: [{value: JSON.stringify(member)}]
-          }
+          }*/
         ]
         await producer.sendBatch({ topicMessages })
       }

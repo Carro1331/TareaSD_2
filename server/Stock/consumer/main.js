@@ -53,9 +53,8 @@ global.consumer = consumer;*/
 
 var value = null
 var json = {}
+var stock = []
 //var registro = {};
-var stock = [];
-var count = 1;
 const main = async () => {
   console.log("Entra stock")
   await consumer.connect();
@@ -65,21 +64,18 @@ const main = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
-      console.log({
-        value: message.value.toString(),
-      })
+      var algo = JSON.parse(message.value.toString());
+      console.log(algo)
       json = JSON.parse(value)
       //console.log(json["tiempo"])
       //console.log(json)
       //let find = json["name"]
-
-      if(stock.includes(json)){
-        console.log('Consulta ya guardada')
-      }else{
+      if(json["stock"] <= 20){
         stock.push(json)
         if(stock.length==5){
-          console.log('Lista de 5 consultas guardadas')
+          console.log('Hay 5 miembros registrados con stock para reposicionar')
           console.log(stock)
+          stock = [] //stock.lenght=0
         }
       }
     },
