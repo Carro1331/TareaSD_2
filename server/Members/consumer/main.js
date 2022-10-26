@@ -62,8 +62,6 @@ const main = async () => {
   console.log("Entra main")
   await consumer.connect();
   await consumer.subscribe({ topic: "members", fromBeginning: true });
-  console.log("producer");
-
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
@@ -71,7 +69,7 @@ const main = async () => {
       //  value: message.value.toString(),
       //})
       json = JSON.parse(value)
-      console.log(members.length,"Miembro Registrado recientemente:")
+      console.log(members.length + 1,"Miembro Registrado recientemente:")
       console.log(json)
       if(members.includes(json)){
         console.log("????")
@@ -82,7 +80,7 @@ const main = async () => {
       }
     },
   })
-  .catch(console.error)
+//  .catch(console.error)
 };
 
 //asdlaskdj

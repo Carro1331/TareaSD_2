@@ -9,7 +9,7 @@ services:
     container_name: members_producer
     build: ./server/Members/producer
     depends_on:
-       - members_consumer
+       - zookeeper
        - kafka 
 
     networks:
@@ -23,7 +23,9 @@ services:
     networks:
       - lared
     depends_on:
-      - kafka
+       - zookeeper
+       - kafka 
+
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -36,8 +38,9 @@ services:
     networks:
       - lared
     depends_on:
-       - sales_consumer
-       - kafka
+       - zookeeper
+       - kafka 
+
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -49,8 +52,10 @@ services:
     build: ./server/Ventas/consumer
     networks:
       - lared
-    depends_on: 
-      - kafka
+    depends_on:
+       - zookeeper
+       - kafka 
+
     # volumes:
     #   - ./server/error:/usr/src/app
 
@@ -63,6 +68,9 @@ services:
     networks:
       - lared
     depends_on:
+       - zookeeper
+       - kafka 
+    environment: 
       - kafka
     # volumes:
     #   - ./server/error:/usr/src/app
@@ -94,7 +102,7 @@ services:
       KAFKA_ADVERTISED_PORT: "9092"
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKAJS_NO_PARTITIONER_WARNING: "1"
+      
     ports:
       - 9092:9092
 
