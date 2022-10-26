@@ -67,15 +67,18 @@ const main = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
-      /*console.log({
-        value: message.value.toString(),
-      })*/
+      //console.log({
+      //  value: message.value.toString(),
+      //})
       json = JSON.parse(value)
+      console.log(members.length,"Miembro Registrado recientemente:")
       console.log(json)
       if(members.includes(json)){
-
+        console.log("????")
       }else{
+        console.log("Miembros -> ",members)
         members.push(json)
+        console.log("Once has been pushed, ", members)
       }
     },
   })

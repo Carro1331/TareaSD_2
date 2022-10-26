@@ -23,6 +23,9 @@ app.use(cors());
 var port = process.env.PORT || 3000;
 var host = process.env.PORT || '0.0.0.0';
 ///////////////////////////////////////////////////////////////
+var cpremium = [];
+var cpnopremium = [];
+var value = null;
 
 var kafka = new Kafka({
   clientId: "my-app",
@@ -43,7 +46,9 @@ app.post("/new_member", (req, res) => {
         patente: patente,
         premium: premium,
       }
-      if(member["premium"] == 'si'){
+      value = JSON.stringify(member);
+      if(member["premium"] == 1){
+        cpremium.push(value);
         const topicMessages = [
           {
             // Stock debe estar leyendo constantes consultas
@@ -58,6 +63,7 @@ app.post("/new_member", (req, res) => {
         ]
         await producer.sendBatch({ topicMessages })
       }else{
+        cpnopremium.push(value);
         const topicMessages = [
           {
             // Stock debe estar leyendo constantes consultas
@@ -72,28 +78,27 @@ app.post("/new_member", (req, res) => {
         ]
         await producer.sendBatch({ topicMessages })
       }
-      
 
-      /*await producer_stock.send({
-        topic: "stock",
-        //value: JSON.stringify(user)
-        messages: [{ value: JSON.stringify(user) }],
-      })*/
       await producer.disconnect();
-      //await admin.disconnect();
+
       res.json(member);
       console.log("Miembro registrado");
-  })();
+      console.log("Miembros Normales:" ,cpnopremium.length)
+      console.log("Miembros Premium:" , cpremium.length)
+      if(cpnopremium != null )
+      {
+        console.log("Listado Clientes premium:")
+        console.log(cpremium)
+      }
+      if(cpnopremium != null )
+      {
+        console.log("Listado de clientes No Premium:")
+        console.log(cpnopremium)
+      }
+      
+    })();
+
 });
-
-
-  ///////////////////////////////////////////////////////////////  
-
-
-/*app.get("/", (req, res) => {
-  res.send("ola api");
-});*/
-
 
 /* PORTS */
 
