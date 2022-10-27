@@ -53,6 +53,7 @@ app.post("/new_member", (req, res) => {
           {
             // Stock debe estar leyendo constantes consultas
             topic: 'members',
+            partition : 1,
             messages: [{value: JSON.stringify(member), partition: 1}]
           },
           /*{

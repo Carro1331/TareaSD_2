@@ -42,7 +42,7 @@ const main = async () => {
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
-      console.log("Estoy en la particion 3")
+      console.log("Estoy en la particion 2")
       console.log("Aqui estan todos los carritos limpios.")
 
       var algo = JSON.parse(message.value.toString());
