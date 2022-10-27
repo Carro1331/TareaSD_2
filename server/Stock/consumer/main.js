@@ -27,30 +27,6 @@ var kafka = new Kafka({
 });
 const consumer = kafka.consumer({ groupId: "group-stock" });
 
-//kafka
-/*var consumer = new Kafka.KafkaConsumer({
-'group.id': 'kafka',
-'metadata.broker.list': 'elkafka:9092',
-}, {});
-
-consumer.connect();
-consumer.on('ready', () => {
-    console.log('consumer ready..')
-    consumer.subscribe(['test']);
-    consumer.consume();
-  }).on('data', function(data) {
-    console.log(`received message: ${eventType.fromBuffer(data.value)}`);
-  });
-global.consumer = consumer;*/
-/* VARIABLES */
-
-//app.use(require('./api/find'))
-
-/*app.get('/', (req, res) => {
-  res.send('sale list')
-  main();
-})*/
-
 var value = null
 var json = {}
 var stock = []
@@ -67,7 +43,9 @@ const main = async () => {
       var algo = JSON.parse(message.value.toString());
       console.log(algo)
       json = JSON.parse(value)
-
+      //console.log(json["tiempo"])
+      //console.log(json)
+      //let find = json["name"]
       if(json["stock"] <= 20){
         stock.push(json)
         if(stock.length==5){
@@ -81,7 +59,12 @@ const main = async () => {
   .catch(console.error)
 };
 
+//asdlaskdj
+app.get('/blocked', (req, res) => {
+  res.send(bloqueados)
+})
 /* PORTS */
+
 app.listen(port,host,()=>{
     console.log(`API-Blocked run in: http://localhost:${port}.`)
     main()

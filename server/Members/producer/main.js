@@ -26,12 +26,12 @@ var host = process.env.PORT || '0.0.0.0';
 var cpremium = [];
 var cpnopremium = [];
 var value = null;
-var id = 0;
+
 var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
 });
-
+3
 app.post("/new_member", (req, res) => {
   (async () => {
       const producer = kafka.producer();
@@ -53,13 +53,9 @@ app.post("/new_member", (req, res) => {
           {
             // Stock debe estar leyendo constantes consultas
             topic: 'members',
+            partition : 1,
             messages: [{value: JSON.stringify(member), partition: 1}]
           },
-          {
-              // Stock debe estar leyendo constantes consultas
-              topic: 'ubication',
-              messages: [{value: JSON.stringify(member)}]
-          }
         ]
         await producer.sendBatch({ topicMessages })
       }else{
@@ -70,18 +66,19 @@ app.post("/new_member", (req, res) => {
             topic: 'members',
             messages: [{value: JSON.stringify(member), partition: 0}]
           },
-          {
+          /*{
               // Stock debe estar leyendo constantes consultas
-              topic: 'ubication',
+              topic: 'stock',
               messages: [{value: JSON.stringify(member)}]
-          }
+          }*/
         ]
         await producer.sendBatch({ topicMessages })
       }
 
       await producer.disconnect();
 
-      res.json(member);
+      res.json("Agregado");
+
       console.log("Miembro registrado");
       console.log("Miembros Normales:" ,cpnopremium.length)
       console.log("Miembros Premium:" , cpremium.length)
@@ -97,7 +94,7 @@ app.post("/new_member", (req, res) => {
       }
       
     })();
-    id++
+
 });
 
 /* PORTS */

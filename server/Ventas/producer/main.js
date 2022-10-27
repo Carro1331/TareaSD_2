@@ -35,15 +35,14 @@ app.post("/sales", (req, res) => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
       await producer.connect();
-      const { client, count_sopaipillas, hora, stock, ubicacion, patente_carro } = req.body;
-      //var time = Math.floor(new Date() / 1000);
+      const { client, count_sopaipillas, hora, stock, ubicacion } = req.body;
+      var time = Math.floor(new Date() / 1000);
       let sale = {
         client: client,
         count_sopaipillas: count_sopaipillas,
         hora: hora,
         stock: stock,
-        ubicacion: ubicacion,
-        patente_carro:patente_carro
+        ubicacion: ubicacion
       }
       const topicMessages = [
         {

@@ -43,8 +43,7 @@ http://localhost:3001/sales
   "count_sopaipillas": "3",
 	"hora": "14:45",
 	"stock": "5",
-	"ubicacion": "2,1",
-	"patente_carro": "CGZY30"
+	"ubicacion": "2,1"
 }
 
 Topic: Stock
@@ -59,7 +58,7 @@ http://localhost:3000/new_member
 
 {
 	"name": "abel",
-  "lastname": "baulloza almeida",
+  	"lastname": "baulloza almeida",
 	"dni": "20.245.835-1",
 	"mail": "abel.baulloza@mail.udp.cl",
 	"patente": "CGZY30",
