@@ -5,8 +5,11 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const { Kafka } = require("kafkajs");
+
 //-------------------------------------------
 
+/* CONFIGS */
+//server.server();
 const app = express();
 dotenv.config();
 app.use(
@@ -17,11 +20,10 @@ app.use(
 app.use(bodyParser.json());
 app.use(cors());
 
+var value = null
 var port = process.env.PORT || 3000;
 var host = process.env.PORT || '0.0.0.0';
-
-var value = null
-
+///////////////////////////////////////////////////////////////
 
 var kafka = new Kafka({
   clientId: "my-app",
@@ -42,8 +44,6 @@ app.post("/ubication", (req, res) => {
         denuncia:denuncia ,
         tiempo: time.toString()
       }
-
-
       value = JSON.stringify(ubication)
       if(ubication["denuncia"] == 1){
         console.log("Este carrito ha sido denunciado, es profugo")
@@ -60,23 +60,19 @@ app.post("/ubication", (req, res) => {
       else{
         console.log("Carrito Limpio.")
 
-         const CarroProfugo = [{
-          topic: 'ubication',
-          partition:0,
-          messages:[{value:JSON.stringify(ubication),partition: 0}]
-          }
-        ]
-        await producer.sendBatch({CarroProfugo})
-        console.log("Envie", ubication)
-      }
-      await producer.disconnect();
-      res.json(ubication);
-  })();
-});
-
-
-
-  ///////////////////////////////////////////////////////////////  
+         const CarroProfugo = [{topic: 'ubication',
+         partition:0,
+         messages:[{value:JSON.stringify(ubication),partition: 0}]
+         }
+       ]
+       await producer.sendBatch({CarroProfugo})
+       console.log("Envie", ubication)
+     }
+     await producer.disconnect();
+     res.json(ubication);
+    })();
+  });
+      ///////////////////////////////////////////////////////////////  
 
 /* PORTS */
 

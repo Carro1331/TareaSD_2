@@ -45,14 +45,14 @@ const main = async () => {
       }
       else if(partition == 0)
       {
+        
         var miembro = JSON.parse(message.value.toString());
         console.log(miembro)
       }
     },
   })
 }
-
 app.listen(port,host,()=>{
-    console.log(`Registro de miembros in: http://localhost:${port}.`)
-    main()
+  console.log(`Registro de miembros in: http://localhost:${port}.`)
+  main()
 });

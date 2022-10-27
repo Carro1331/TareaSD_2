@@ -55,50 +55,49 @@ app.post("/new_member", (req, res) => {
             topic: 'members',
             partition : 1,
             messages: [{value: JSON.stringify(member), partition: 1}]
-          },
-        ]
-        await producer.sendBatch({ topicMessages })
-      }else{
-        cpnopremium.push(value);
-        const topicMessages = [
-          {
-            // Stock debe estar leyendo constantes consultas
-            topic: 'members',
-            messages: [{value: JSON.stringify(member), partition: 0}]
-          },
-          /*{
+          },]
+          await producer.sendBatch({ topicMessages })
+        }else{
+          cpnopremium.push(value);
+          const topicMessages = [
+            {
               // Stock debe estar leyendo constantes consultas
-              topic: 'stock',
-              messages: [{value: JSON.stringify(member)}]
-          }*/
-        ]
-        await producer.sendBatch({ topicMessages })
-      }
-
-      await producer.disconnect();
-
-      res.json("Agregado");
-
-      console.log("Miembro registrado");
-      console.log("Miembros Normales:" ,cpnopremium.length)
-      console.log("Miembros Premium:" , cpremium.length)
-      if(cpnopremium != null )
-      {
-        console.log("Listado Clientes premium:")
-        console.log(cpremium)
-      }
-      if(cpnopremium != null )
-      {
-        console.log("Listado de clientes No Premium:")
-        console.log(cpnopremium)
-      }
-      
-    })();
-
-});
-
-/* PORTS */
-
-app.listen(port,host, () => {
-  console.log(`API run in: http://localhost:${port}.`);
-});
+              topic: 'members',
+              messages: [{value: JSON.stringify(member), partition: 0}]
+            },
+            /*{
+                // Stock debe estar leyendo constantes consultas
+                topic: 'stock',
+                messages: [{value: JSON.stringify(member)}]
+            }*/
+          ]
+          await producer.sendBatch({ topicMessages })
+        }
+  
+        await producer.disconnect();
+  
+        res.json("Agregado");
+  
+        console.log("Miembro registrado");
+        console.log("Miembros Normales:" ,cpnopremium.length)
+        console.log("Miembros Premium:" , cpremium.length)
+        if(cpnopremium != null )
+        {
+          console.log("Listado Clientes premium:")
+          console.log(cpremium)
+        }
+        if(cpnopremium != null )
+        {
+          console.log("Listado de clientes No Premium:")
+          console.log(cpnopremium)
+        }
+        
+      })();
+  
+  });
+  
+  /* PORTS */
+  
+  app.listen(port,host, () => {
+    console.log(`API run in: http://localhost:${port}.`);
+  });

@@ -31,7 +31,7 @@ var json = {}
 var stock = []
 
 app.post("/ubication",(req,res) => {
-  (const main = async () => {
+  const main = async () => {
     const consumer = kafka.consumer({ groupId: "ubication" });
     console.log("Entra Ubication")
     await consumer.connect();
@@ -55,8 +55,8 @@ app.post("/ubication",(req,res) => {
         }
       },
     })
-  })();
-})
+  }
+});
 
 app.listen(port,host,()=>{
     console.log(`API-Blocked run in: http://localhost:${port}.`)
