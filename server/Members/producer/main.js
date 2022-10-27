@@ -56,11 +56,6 @@ app.post("/new_member", (req, res) => {
             partition : 1,
             messages: [{value: JSON.stringify(member), partition: 1}]
           },
-          /*{
-              // Stock debe estar leyendo constantes consultas
-              topic: 'stock',
-              messages: [{value: JSON.stringify(member)}]
-          }*/
         ]
         await producer.sendBatch({ topicMessages })
       }else{

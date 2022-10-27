@@ -45,7 +45,8 @@ const main = async () => {
       }
       else if(partition == 0)
       {
-        
+        var miembro = JSON.parse(message.value.toString());
+        console.log(miembro)
       }
     },
   })
