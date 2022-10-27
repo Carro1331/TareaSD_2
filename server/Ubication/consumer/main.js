@@ -37,7 +37,7 @@ const main = async () => {
   console.log("Entra Ubication")
   await consumer.connect();
   await consumer.subscribe({ topic: "ubication", fromBeginning: true });
-  console.log("producer");
+  console.log("consumer");
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -45,15 +45,6 @@ const main = async () => {
       var algo = JSON.parse(message.value.toString());
       console.log(algo)
       json = JSON.parse(value)
-      
-      if(json["stock"] <= 20){
-        stock.push(json)
-        if(stock.length==5){
-          console.log('Hay 5 miembros registrados con stock para reposicionar')
-          console.log(stock)
-          stock = [] //stock.lenght=0
-        }
-      }
     },
   })
   .catch(console.error)

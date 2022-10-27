@@ -5,6 +5,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const { Kafka } = require("kafkajs");
+const { json } = require("body-parser");
 
 //-------------------------------------------
 
@@ -20,7 +21,7 @@ app.use(cors());
 
 var port = process.env.PORT || 3000;
 var host = process.env.PORT || '0.0.0.0';
-
+const CarroProfugo = null
 var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
@@ -32,16 +33,45 @@ app.post("/ubication", (req, res) => {
       const producer = kafka.producer();
       //const admin = kafka.admin();
       await producer.connect();
-      const { coordenadas } = req.body;
+      const { id,coordenadas , denuncia } = req.body;
       var time = Math.floor(new Date() / 1000);
       let ubication = {
-        coordenadas:coordenadas
+        id: id,
+        coordenadas:coordenadas,
+        denuncia:denuncia ,
+        tiempo: time.toString()
       }
       await producer.send({
         topic: "ubication",
-        //value: JSON.stringify(user)
         messages: [{ value: JSON.stringify(ubication) }],
       })
+
+      if(ubication["denuncia"] == 1){
+        console.log("Este carrito ha sido denunciado, es profugo")
+
+         CarroProfugo = [{
+            // partition 2 para carros profugos
+            topic: 'ubication',
+            messages:[{value:JSON.stringify(ubication),partition : 2}]
+          }
+        ]
+      }
+      else if(ubication["denuncia"]==0){
+        console.log("Carrito Limpio.")
+
+         CarroProfugo = [{
+          //Partition 3 para carros no profugos
+          topic: 'ubication',
+          messages:[{value:JSON.stringify(ubication), partition: 3}]
+          }
+        ]
+
+      }
+      await producer.sendBatch({CarroProfugo})
+      await producer.disconnect();
+      //await admin.disconnect();
+      res.json(ubication);
+  
       await producer.disconnect();
       //await admin.disconnect();
       res.json(ubication);
@@ -51,12 +81,6 @@ app.post("/ubication", (req, res) => {
 
 
   ///////////////////////////////////////////////////////////////  
-
-
-app.get("/", (req, res) => {
-  res.send("ola api");
-});
-
 
 /* PORTS */
 
