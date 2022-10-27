@@ -21,7 +21,7 @@ app.use(cors());
 
 var port = process.env.PORT || 3000;
 var host = process.env.PORT || '0.0.0.0';
-const CarroProfugo = null
+var CarroProfugo = null
 var kafka = new Kafka({
   clientId: "my-app",
   brokers: ["kafka:9092"],
@@ -41,18 +41,13 @@ app.post("/ubication", (req, res) => {
         denuncia:denuncia ,
         tiempo: time.toString()
       }
-      await producer.send({
-        topic: "ubication",
-        messages: [{ value: JSON.stringify(ubication) }],
-      })
-
       if(ubication["denuncia"] == 1){
         console.log("Este carrito ha sido denunciado, es profugo")
 
          CarroProfugo = [{
             // partition 2 para carros profugos
             topic: 'ubication',
-            messages:[{value:JSON.stringify(ubication),partition : 2}]
+            messages:[{value:JSON.stringify(ubication),partition : 1}]
           }
         ]
       }
@@ -62,18 +57,14 @@ app.post("/ubication", (req, res) => {
          CarroProfugo = [{
           //Partition 3 para carros no profugos
           topic: 'ubication',
-          messages:[{value:JSON.stringify(ubication), partition: 3}]
+          partition:0,
+          messages:[{value:JSON.stringify(ubication)}]
           }
         ]
 
       }
       await producer.sendBatch({CarroProfugo})
       await producer.disconnect();
-      //await admin.disconnect();
-      res.json(ubication);
-  
-      await producer.disconnect();
-      //await admin.disconnect();
       res.json(ubication);
   })();
 });

@@ -36,12 +36,15 @@ var stock = []
 const main = async () => {
   console.log("Entra Ubication")
   await consumer.connect();
-  await consumer.subscribe({ topic: "ubication", fromBeginning: true });
+  await consumer.subscribe({ topic: "ubication",partition: 0, fromBeginning: true });
   console.log("consumer");
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       value = message.value
+      console.log("Estoy en la particion 3")
+      console.log("Aqui estan todos los carritos limpios.")
+
       var algo = JSON.parse(message.value.toString());
       console.log(algo)
       json = JSON.parse(value)
