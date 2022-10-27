@@ -26,73 +26,37 @@ var kafka = new Kafka({
   brokers: ["kafka:9092"],
 });
 
-const consumer = kafka.consumer({ groupId: "group-ubication" });
-
-
-
-//kafka
-/*var consumer = new Kafka.KafkaConsumer({
-'group.id': 'kafka',
-'metadata.broker.list': 'elkafka:9092',
-}, {});
-
-consumer.connect();
-consumer.on('ready', () => {
-    console.log('consumer ready..')
-    consumer.subscribe(['test']);
-    consumer.consume();
-  }).on('data', function(data) {
-    console.log(`received message: ${eventType.fromBuffer(data.value)}`);
-  });
-global.consumer = consumer;*/
-/* VARIABLES */
-
-//app.use(require('./api/find'))
-
-/*app.get('/', (req, res) => {
-  res.send('sale list')
-  main();
-})*/
-
 var value = null
 var json = {}
-var car = {}
-var pos_car = []
-var pos_car_time = []
-//var registro = {};
-const main = async () => {
-  console.log("Entra Ubication")
-  await consumer.connect();
-  await consumer.subscribe({ topic: "ubication", fromBeginning: true});
+var stock = []
 
-  console.log("producer");
-
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      value = message.value
-      var algo = JSON.parse(message.value.toString());
-      console.log(algo)
-      json = JSON.parse(value)
-      
-      if(json["id"] in car){
-        var array = []
-        car[json["id"]] = array
-        car[json["id"]].push(json["time"])
-      }else{
-        car.push(json["id"])
-
-      }
-      
-    },
-  })
-  .catch(console.error)
-};
-
-//asdlaskdj
-app.get('/blocked', (req, res) => {
-  res.send(bloqueados)
+app.post("/ubication",(req,res) => {
+  (const main = async () => {
+    const consumer = kafka.consumer({ groupId: "ubication" });
+    console.log("Entra Ubication")
+    await consumer.connect();
+    await consumer.subscribe({ topic: "ubication", fromBeginning: true });
+  
+    await consumer.run({
+      eachMessage: async ({ topic, partition, message }) => {
+        //value = message.value
+        if(partition == 0){
+          console.log("Este carrito no fue denunciado")
+          console.log(value) 
+        }
+        else if(partition == 1)
+        {
+          console.log("Este carrito fue denunciado, ES PROFUGO ATRAPENLOC CTMRE")
+          console.log(value)
+        }
+        else
+        {
+          console.log("Estoy en la shit.")
+        }
+      },
+    })
+  })();
 })
-/* PORTS */
 
 app.listen(port,host,()=>{
     console.log(`API-Blocked run in: http://localhost:${port}.`)
