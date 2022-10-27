@@ -77,6 +77,34 @@ services:
 
     ports:
       - "8002:8000"
+
+  ubication_producer:
+    container_name: ubication_producer
+    build: ./server/Ubication/producer
+    networks:
+      - lared
+    depends_on:
+       - zookeeper
+       - kafka 
+
+    # volumes:
+    #   - ./server/error:/usr/src/app
+
+    ports:
+      - "3003:3000"
+
+  ubication_consumer:
+    container_name: ubication_consumer
+    build: ./server/Ubication/consumer
+    networks:
+      - lared
+    depends_on:
+       - zookeeper
+       - kafka 
+    ports:
+      - "8003:8000"
+
+
   
   zookeeper:
     container_name: elzookeeper
@@ -102,7 +130,7 @@ services:
       KAFKA_ADVERTISED_PORT: "9092"
       ALLOW_PLAINTEXT_LISTENER: "yes"
       KAFKA_CFG_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      
+
     ports:
       - 9092:9092
 

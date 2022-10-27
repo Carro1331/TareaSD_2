@@ -8,8 +8,6 @@ const { Kafka } = require("kafkajs");
 
 //-------------------------------------------
 
-/* CONFIGS */
-//server.server();
 const app = express();
 dotenv.config();
 app.use(
@@ -22,7 +20,6 @@ app.use(cors());
 
 var port = process.env.PORT || 3000;
 var host = process.env.PORT || '0.0.0.0';
-///////////////////////////////////////////////////////////////
 
 var kafka = new Kafka({
   clientId: "my-app",

@@ -27,29 +27,7 @@ var kafka = new Kafka({
 });
 const consumer = kafka.consumer({ groupId: "group-ubication" });
 
-//kafka
-/*var consumer = new Kafka.KafkaConsumer({
-'group.id': 'kafka',
-'metadata.broker.list': 'elkafka:9092',
-}, {});
 
-consumer.connect();
-consumer.on('ready', () => {
-    console.log('consumer ready..')
-    consumer.subscribe(['test']);
-    consumer.consume();
-  }).on('data', function(data) {
-    console.log(`received message: ${eventType.fromBuffer(data.value)}`);
-  });
-global.consumer = consumer;*/
-/* VARIABLES */
-
-//app.use(require('./api/find'))
-
-/*app.get('/', (req, res) => {
-  res.send('sale list')
-  main();
-})*/
 
 var value = null
 var json = {}
@@ -81,7 +59,6 @@ const main = async () => {
   .catch(console.error)
 };
 
-//asdlaskdj
 app.get('/blocked', (req, res) => {
   res.send(bloqueados)
 })
